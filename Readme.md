@@ -36,6 +36,20 @@ CC0 1.0 license.
 
 ## Mudanças Propostas
 
+São propostas as seguintes variações no Sugarscape: 
+
++ As formigas podem se reproduzir, caso possuam um nível mínimo de açúcar armazenado. Em
+cada etapa, há uma probabilidade de cada formiga se reproduzir, controlada por um _slider_
+na visualização do navegador.
+    - **Efeito esperado**: enquanto no Sugarscape original a população de formigas tendia
+    à estabilidade, com a introdução dessa mudança é esperado que a população oscile para
+    sempre, dada uma taxa de reprodução suficientemente grande.
++ Adicionar a taxa de crescimento da cana de açúcar como uma variável do modelo,
+juntamente com um _slider_ que a controle no navegador.
+    - **Efeito esperado**: quanto maior a taxa de crescimento, maior será a população
+    média das formigas durante as últimas etapas da simulação (ignoramos as primeiras
+    etapas, porque a população não é estável o suficiente nessa parte).
+
 ------------------------------------------------------------------------------------------
 
 ## Especificação da Tarefa (copiada do LaTeX da disciplina)

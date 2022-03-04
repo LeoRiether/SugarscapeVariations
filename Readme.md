@@ -2,15 +2,17 @@
 
 Por Leonardo Alves Riether - 190032413
 
-## Como Executar Primeiro, deve-se instalar o framework
-[mesa](https://mesa.readthedocs.io/en/latest/) e demais dependências necessárias com o
-comando `python3 -m pip install -r requirements.txt`. É recomendado utilizar um [_virtual environment_](https://docs.python.org/3/library/venv.html), para evitar poluir o escopo
-global do Python.
+## Como Executar
+Primeiro, deve-se instalar o framework
+[mesa](https://mesa.readthedocs.io/en/latest/) e demais dependências
+necessárias com o comando `python3 -m pip install -r requirements.txt`. É
+recomendado utilizar um [_virtual environment_](https://docs.python.org/3/library/venv.html), para evitar poluir
+o escopo global do Python.
 
 Após isso, basta abrir o terminal no diretório da simulação e executar `mesa runserver`.
 De modo equivalente, é possível rodar `python3 run.py`.
 
-## Sugarscape Original TODO: explicar `mesa/examples/sugarscape_cg`
+## Sugarscape Original
 
 A simulação escolhida como base para fazer as modificações foi a
 [sugarscape](https://github.com/projectmesa/mesa/tree/main/examples/sugarscape_cg). Esse
@@ -27,11 +29,11 @@ dentro desse campo, para tentar maximizar suas chances de sobreviver.
 O programa é baseado no modelo "Netlogo Sugarscape 2 Constant Growback", introduzido por
 Epstein e Axtell.
 
-Li, J. and Wilensky, U. (2009). NetLogo Sugarscape 2 Constant Growback model.
+> Li, J. and Wilensky, U. (2009). NetLogo Sugarscape 2 Constant Growback model.
 http://ccl.northwestern.edu/netlogo/models/Sugarscape2ConstantGrowback.  Center for
 Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
 
-The ant sprite is taken from https://openclipart.org/detail/229519/ant-silhouette, with
+> The ant sprite is taken from https://openclipart.org/detail/229519/ant-silhouette, with
 CC0 1.0 license.
 
 ## Mudanças Propostas

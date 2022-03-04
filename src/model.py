@@ -24,18 +24,27 @@ class SugarscapeCg(Model):
 
     verbose = True  # Print-monitoring
 
-    def __init__(self, height=50, width=50, initial_population=100):
+    def __init__(
+        self, height=50, width=50, initial_population=100,
+        reproduce_prob=0.5, growback_factor=1,
+    ):
         """
         Create a new Constant Growback model with the given parameters.
 
         Args:
             initial_population: Number of population to start with
+            reproduce_prob: Probability that a given ant reproduces in some
+                            step of the simulation
+            growback_factor: Amount that every sugarcane grows by each step
+
         """
 
         # Set parameters
         self.height = height
         self.width = width
         self.initial_population = initial_population
+        self.reproduce_prob = reproduce_prob
+        self.growback_factor = growback_factor
 
         self.schedule = RandomActivationByBreed(self)
         self.grid = MultiGrid(self.height, self.width, torus=False)
@@ -46,7 +55,7 @@ class SugarscapeCg(Model):
         # Create sugar
         import numpy as np
 
-        sugar_distribution = np.genfromtxt("sugarscape_cg/sugar-map.txt")
+        sugar_distribution = np.genfromtxt("src/sugar-map.txt")
         for _, x, y in self.grid.coord_iter():
             max_sugar = sugar_distribution[x, y]
             sugar = Sugar((x, y), self, max_sugar)

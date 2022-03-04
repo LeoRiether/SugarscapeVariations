@@ -77,6 +77,7 @@ class Sugar(Agent):
         super().__init__(pos, model)
         self.amount = max_sugar
         self.max_sugar = max_sugar
+        self.growback_factor = model.growback_factor
 
     def step(self):
-        self.amount = min([self.max_sugar, self.amount + 1])
+        self.amount = min([self.max_sugar, self.amount + self.growback_factor])

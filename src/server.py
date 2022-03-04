@@ -47,7 +47,7 @@ params = {
     "reproduce_prob": UserSettableParameter(
         param_type="slider",
         name="Ant Reproduce Probability",
-        value=0.5,
+        value=0.1,
         min_value=0.0,
         max_value=1.0,
         step=0.05,
@@ -56,7 +56,7 @@ params = {
     "growback_factor": UserSettableParameter(
         param_type="slider",
         name="Growback Factor",
-        value=1,
+        value=0.15,
         min_value=0,
         max_value=3,
         step=0.05,

@@ -17,6 +17,7 @@ class RandomActivationByBreed(RandomActivation):
     def __init__(self, model):
         super().__init__(model)
         self.agents_by_breed = defaultdict(dict)
+        self.seen_ids = set()
 
     def add(self, agent):
         """
@@ -26,6 +27,10 @@ class RandomActivationByBreed(RandomActivation):
             agent: An Agent to be added to the schedule.
         """
 
+        uid = f"{agent.unique_id}"
+        if uid in self.seen_ids:
+            print("DUPLICATE ", uid)
+        self.seen_ids.add(uid)
         self._agents[agent.unique_id] = agent
         agent_class = type(agent)
         self.agents_by_breed[agent_class][agent.unique_id] = agent

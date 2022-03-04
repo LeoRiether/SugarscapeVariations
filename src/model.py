@@ -52,13 +52,19 @@ class SugarscapeCg(Model):
             {"SsAgent": lambda m: m.schedule.get_breed_count(SsAgent)}
         )
 
+
+        self.children = []
+        self.removals = []
+
         # Create sugar
         import numpy as np
 
         sugar_distribution = np.genfromtxt("src/sugar-map.txt")
+        self.sugar_agent_at = np.ndarray((self.height, self.width), dtype=Sugar)
         for _, x, y in self.grid.coord_iter():
             max_sugar = sugar_distribution[x, y]
             sugar = Sugar((x, y), self, max_sugar)
+            self.sugar_agent_at[x, y] = sugar
             self.grid.place_agent(sugar, (x, y))
             self.schedule.add(sugar)
 
@@ -69,19 +75,35 @@ class SugarscapeCg(Model):
             sugar = self.random.randrange(6, 25)
             metabolism = self.random.randrange(2, 4)
             vision = self.random.randrange(1, 6)
-            ssa = SsAgent((x, y), self, False, sugar, metabolism, vision)
+            ssa = SsAgent((x, y), self, False, sugar, metabolism, vision, reproduce_prob)
             self.grid.place_agent(ssa, (x, y))
             self.schedule.add(ssa)
 
         self.running = True
         self.datacollector.collect(self)
 
+    def schedule_add_child(self, child):
+        self.children.append(child)
+
+    def schedule_removal(self, agent):
+        self.removals.append(agent)
+
     def step(self):
         self.schedule.step()
-        # collect data
         self.datacollector.collect(self)
         if self.verbose:
             print([self.schedule.time, self.schedule.get_breed_count(SsAgent)])
+
+        for child in self.children:
+            self.grid.place_agent(child, child.pos)
+            self.schedule.add(child)
+
+        for agent in self.removals:
+            self.grid._remove_agent(agent.pos, agent)
+            self.schedule.remove(agent)
+
+        self.children = []
+        self.removals = []
 
     def run_model(self, step_count=200):
 

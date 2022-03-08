@@ -12,6 +12,9 @@ o escopo global do Python.
 Após isso, basta abrir o terminal no diretório da simulação e executar `mesa runserver`.
 De modo equivalente, é possível rodar `python3 run.py`.
 
+Para rodar a simulação em modo batch, é possível executar o arquivo `batch.py`.
+Esse modo grava os dados coletados em arquivos no diretório `csv/`.
+
 ## Sugarscape Original
 
 A simulação escolhida como base para fazer as modificações foi a
@@ -19,7 +22,7 @@ A simulação escolhida como base para fazer as modificações foi a
 programa simula uma sociedade de formigas que vivem em um campo (grid) de cana de açúcar.
 As formigas precisam se alimentar da cana para sobreviver, enquanto a cana possui uma taxa
 fixa de crescimento, originalmente igual a 1, mas cada posição do grid possui um
-determinado máximo de cana que pode possuir.
+determinado máximo de cana que não pode ultrapassar.
 
 Além disso, cada formiga possui um campo de visão limitado, só podendo ver diretamente
 acima, abaixo ou para os dois lados, em um determinado raio. A cada etapa do programa, as
@@ -49,8 +52,43 @@ na visualização do navegador.
 + Adicionar a taxa de crescimento da cana de açúcar como uma variável do modelo,
 juntamente com um _slider_ que a controle no navegador.
     - **Efeito esperado**: quanto maior a taxa de crescimento, maior será a população
-    média das formigas durante as últimas etapas da simulação (ignoramos as primeiras
-    etapas, porque a população não é estável o suficiente nessa parte).
+    média das formigas durante a simulação.
+    
+## Mudanças no Código
+
+As principais mudanças foram as seguintes:
+- Introdução das variáveis `self.reproduce_prob` e `self.growback_factor` no modelo
+(`SugarscapeCg`). Essas variáveis controlam, respectivamente, a probabilidade de que uma
+formiga se reproduza em uma dada etapa da simulação e a quantidade de crescimento por
+etapa de cada cana de açúcar.
+- Criação de dois sliders em `src/server.py`, por meio da variável `params`, que controlam
+os fatores `reproduce_prob` e `growback_factor` citados anteriormente.
+- Implementação de um método `reproduce` na classe dos agentes/formigas (`SsAgent`), que
+pode gerar, com certa probabilidade, uma formiga filha, na mesma posição que a formiga
+pai, caso o pai tenha mais que `1.5` unidades de açúcar. Caso seja feita a criação de um
+novo agente, o pai dá metade do seu açúcar para o filho, para que não seja criado açúcar a
+partir desse processo.
+- Envio do `growback_factor` aos agentes da classe `Sugar`, em `src/agents.py`, além de
+seu uso no método `step`.
+- Correção de um bug na criação de SsAgents do Sugarscape, em `src/model.py`, que gerava o
+mesmo `unique_id` para formigas distintas, o que levava algumas formigas a serem
+sobrescritas no escalonador e ficarem paradas até o final da simulação. A correção pode
+ser vista [neste commit](https://github.com/LeoRiether/SugarscapeVariations/commit/71991c4f30fb71dc4d3b4bb3fad103535743dbda#diff-f9626810656f0fce88d60f204a11125e00df081ded6cc2bff95922ea8e177b62R19-R24) 
+## Variáveis Armazenadas nos Arquivos CSV
+Os arquivos CSV, gravados no diretório `csv`, possuem as informações necessárias para a
+análise das hipóteses causais citadas, após cálculo de estatísticas relevantes, como a
+média da população de formigas e desvio padrão, para quantificar o tamanho das
+oscilações. As variáveis armazenadas são:
+
+- **RunId:** identificador da execução
+- **iteration:** são feitas várias simulações com os mesmos parâmetros, para diminuir o
+erro envolvido na análise. A variável `iteration` identifica uma iteração com um certo
+conjunto de parâmetros.
+- **Step:** etapa da simulação
+- **reproduce_prob:** probabilidade de reprodução de uma dada formiga
+- **growback_factor:** quantidade de crescimento por etapa das canas de açucar
+- **SsAgent:** tamanho da população de formigas vivas no sugarscape em uma dada etapa da
+simulação
 
 ------------------------------------------------------------------------------------------
 

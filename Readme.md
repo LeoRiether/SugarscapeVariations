@@ -91,6 +91,12 @@ conjunto de parâmetros.
 - **SsAgent:** tamanho da população de formigas vivas no sugarscape em uma dada etapa da
 simulação
 
+Caso a função `batch_run`, definida em `src/model.py`, seja chamada com valores numéricos
+para seus parâmetros, por exemplo `batch_run(rp=0.1, gf=0.2)`, o arquivo csv gerado terá
+os valores dessas variáveis indicados no nome do arquivo, por exemplo
+`data_rp0.1_gf0.2_t2022-03-08_203123.csv`. Note que `rp` é sigla para `reproduce_prob` e
+`gf`, para `growback_factor`.
+
 ------------------------------------------------------------------------------------------
 
 ## Especificação da Tarefa (copiada do LaTeX da disciplina)

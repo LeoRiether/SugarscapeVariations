@@ -131,7 +131,10 @@ class SugarscapeCg(Model):
             )
 
 
-def batch_run(debug_mode=False):
+def batch_run(
+        rp=[0.0, 0.05, 0.10, 0.15, 0.5],
+        gf=[0.0, 0.05, 0.10, 0.15, 0.5, 1.5, 2.5],
+):
     from mesa.batchrunner import batch_run
     from datetime import datetime
     import numpy as np
@@ -140,20 +143,12 @@ def batch_run(debug_mode=False):
     import os
 
     params = {
-        "reproduce_prob": [0.0, 0.05, 0.10, 0.15, 0.2, 0.35, 0.5],
-        "growback_factor": [0, 0.05, 0.10, 0.15, 0.2, 0.35, 0.5,
-                            0.75, 1.0, 1.5, 2.5]
+        "reproduce_prob": rp,
+        "growback_factor": gf,
     }
+
     iterations = 2
     steps = 100
-
-    if debug_mode:
-        params = {
-            "reproduce_prob": [0., 0.05],
-            "growback_factor": [0.1, 0.5],
-        }
-        iterations = 1
-        steps = 2
 
     results = batch_run(
         SugarscapeCg,
@@ -167,9 +162,14 @@ def batch_run(debug_mode=False):
     dataframe = pd.DataFrame(results)
 
     timestamp = datetime.now().strftime("%Y-%m-%d_%H%M%S")
-    path = "data_t{}.csv".format(timestamp)
-    if debug_mode:
-        path = "dbg_" + path
-    os.makedirs("csv", exist_ok=True)
 
-    dataframe.to_csv(os.path.join("csv", path))
+    # Create csv filename
+    fn = "data"
+    if type(rp) != list:
+        fn += "_rp{}".format(rp)
+    if type(gf) != list:
+        fn += "_gf{}".format(gf)
+    fn += "_t{}.csv".format(timestamp)
+
+    os.makedirs("csv", exist_ok=True)
+    dataframe.to_csv(os.path.join("csv", fn))

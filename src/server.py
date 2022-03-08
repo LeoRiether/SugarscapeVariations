@@ -9,13 +9,13 @@ from .model import SugarscapeCg
 def lerp(x0, x1, t):
     return x0 * (1 - t) + x1 * t
 
-def lerp_all(it0, it1, t):
+def lerp_vec(it0, it1, t):
     return [lerp(x, y, t) for x, y in zip(it0, it1)]
 
 def color(amount):
     color0 = [71, 23, 72]
     color1 = [141, 69, 34]
-    [h, s, l] = lerp_all(color0, color1, amount / 3)
+    [h, s, l] = lerp_vec(color0, color1, amount / 3)
     return "hsl({}, {}%, {}%)".format(h, s, l)
 
 def SsAgent_portrayal(agent):
@@ -49,7 +49,7 @@ params = {
         name="Ant Reproduce Probability",
         value=0.15,
         min_value=0.0,
-        max_value=1.0,
+        max_value=0.5,
         step=0.05,
         description="Probability that a given ant reproduces in some step of the simulation",
     ),

@@ -49,7 +49,9 @@ class SugarscapeCg(Model):
         self.schedule = RandomActivationByBreed(self)
         self.grid = MultiGrid(self.height, self.width, torus=False)
         self.datacollector = DataCollector(
-            {"SsAgent": lambda m: m.schedule.get_breed_count(SsAgent)}
+            model_reporters = {
+                "SsAgent": lambda m: m.schedule.get_breed_count(SsAgent),
+            },
         )
 
 
@@ -105,6 +107,9 @@ class SugarscapeCg(Model):
         self.children = []
         self.removals = []
 
+        if len(self.schedule.agents_by_breed[SsAgent]) == 0:
+            self.running = False
+
     def run_model(self, step_count=200):
 
         if self.verbose:
@@ -115,6 +120,8 @@ class SugarscapeCg(Model):
 
         for i in range(step_count):
             self.step()
+            if not self.running:
+                break
 
         if self.verbose:
             print("")
@@ -122,3 +129,47 @@ class SugarscapeCg(Model):
                 "Final number Sugarscape Agent: ",
                 self.schedule.get_breed_count(SsAgent),
             )
+
+
+def batch_run(debug_mode=False):
+    from mesa.batchrunner import batch_run
+    from datetime import datetime
+    import numpy as np
+    import pandas as pd
+    import sys
+    import os
+
+    params = {
+        "reproduce_prob": [0.0, 0.05, 0.10, 0.15, 0.2, 0.35, 0.5],
+        "growback_factor": [0, 0.05, 0.10, 0.15, 0.2, 0.35, 0.5,
+                            0.75, 1.0, 1.5, 2.5]
+    }
+    iterations = 2
+    steps = 100
+
+    if debug_mode:
+        params = {
+            "reproduce_prob": [0., 0.05],
+            "growback_factor": [0.1, 0.5],
+        }
+        iterations = 1
+        steps = 2
+
+    results = batch_run(
+        SugarscapeCg,
+        params,
+        iterations=iterations,
+        max_steps=steps,
+        number_processes=None,
+        data_collection_period=1,
+    )
+
+    dataframe = pd.DataFrame(results)
+
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H%M%S")
+    path = "data_t{}.csv".format(timestamp)
+    if debug_mode:
+        path = "dbg_" + path
+    os.makedirs("csv", exist_ok=True)
+
+    dataframe.to_csv(os.path.join("csv", path))

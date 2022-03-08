@@ -73,7 +73,8 @@ seu uso no método `step`.
 - Correção de um bug na criação de SsAgents do Sugarscape, em `src/model.py`, que gerava o
 mesmo `unique_id` para formigas distintas, o que levava algumas formigas a serem
 sobrescritas no escalonador e ficarem paradas até o final da simulação. A correção pode
-ser vista [neste commit](https://github.com/LeoRiether/SugarscapeVariations/commit/71991c4f30fb71dc4d3b4bb3fad103535743dbda#diff-f9626810656f0fce88d60f204a11125e00df081ded6cc2bff95922ea8e177b62R19-R24) 
+ser vista [neste commit](https://github.com/LeoRiether/SugarscapeVariations/commit/71991c4f30fb71dc4d3b4bb3fad103535743dbda#diff-f9626810656f0fce88d60f204a11125e00df081ded6cc2bff95922ea8e177b62L19-R24) 
+
 ## Variáveis Armazenadas nos Arquivos CSV
 Os arquivos CSV, gravados no diretório `csv`, possuem as informações necessárias para a
 análise das hipóteses causais citadas, após cálculo de estatísticas relevantes, como a

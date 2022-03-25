@@ -23,7 +23,7 @@ class SugarscapeCg(Model):
     Sugarscape 2 Constant Growback
     """
 
-    verbose = True  # Print-monitoring
+    verbose = False  # Print-monitoring
 
     def __init__(
         self, height=50, width=50, initial_population=100,
@@ -57,7 +57,6 @@ class SugarscapeCg(Model):
                 "Oscillation" : lambda m: m.stats.osc(),
             },
         )
-
 
         self.children = []
         self.removals = []
@@ -135,46 +134,3 @@ class SugarscapeCg(Model):
                 self.schedule.get_breed_count(SsAgent),
             )
 
-
-def batch_run(
-        rp=[0.0, 0.05, 0.10, 0.15, 0.5],
-        gf=[0.0, 0.05, 0.10, 0.15, 0.5, 1.5, 2.5],
-):
-    from mesa.batchrunner import batch_run
-    from datetime import datetime
-    import numpy as np
-    import pandas as pd
-    import sys
-    import os
-
-    params = {
-        "reproduce_prob": rp,
-        "growback_factor": gf,
-    }
-
-    iterations = 2
-    steps = 100
-
-    results = batch_run(
-        SugarscapeCg,
-        params,
-        iterations=iterations,
-        max_steps=steps,
-        number_processes=None,
-        data_collection_period=1,
-    )
-
-    dataframe = pd.DataFrame(results)
-
-    timestamp = datetime.now().strftime("%Y-%m-%d_%H%M%S")
-
-    # Create csv filename
-    fn = "data"
-    if type(rp) != list:
-        fn += "_rp{}".format(rp)
-    if type(gf) != list:
-        fn += "_gf{}".format(gf)
-    fn += "_t{}.csv".format(timestamp)
-
-    os.makedirs("csv", exist_ok=True)
-    dataframe.to_csv(os.path.join("csv", fn))

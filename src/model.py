@@ -16,6 +16,7 @@ from mesa.datacollection import DataCollector
 from .agents import SsAgent, Sugar
 from .schedule import RandomActivationByBreed
 
+from .moving_stats import MovingStats
 
 class SugarscapeCg(Model):
     """
@@ -46,11 +47,15 @@ class SugarscapeCg(Model):
         self.reproduce_prob = reproduce_prob
         self.growback_factor = growback_factor
 
+        self.stats = MovingStats()
         self.schedule = RandomActivationByBreed(self)
         self.grid = MultiGrid(self.height, self.width, torus=False)
         self.datacollector = DataCollector(
             model_reporters = {
-                "SsAgent": lambda m: m.schedule.get_breed_count(SsAgent),
+                "SsAgent"     : lambda m: m.schedule.get_breed_count(SsAgent),
+                "Average"     : lambda m: m.stats.avg(),
+                "Stdev"       : lambda m: m.stats.stdev(),
+                "Oscillation" : lambda m: m.stats.osc(),
             },
         )
 
@@ -92,6 +97,7 @@ class SugarscapeCg(Model):
 
     def step(self):
         self.schedule.step()
+        self.stats.update_step(self.schedule.get_breed_count(SsAgent))
         self.datacollector.collect(self)
         if self.verbose:
             print([self.schedule.time, self.schedule.get_breed_count(SsAgent)])

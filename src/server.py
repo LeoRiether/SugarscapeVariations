@@ -41,7 +41,11 @@ def SsAgent_portrayal(agent):
 
 
 canvas_element = CanvasGrid(SsAgent_portrayal, 50, 50, 500, 500)
-chart_element = ChartModule([{"Label": "SsAgent", "Color": "#AA0000"}])
+chart_element = ChartModule([
+    {"Label": "SsAgent", "Color": "#AA0000"},
+    {"Label": "Average", "Color": "#00AA00"},
+    {"Label": "Oscillation", "Color": "#0000AA"},
+])
 
 params = {
     "reproduce_prob": UserSettableParameter(

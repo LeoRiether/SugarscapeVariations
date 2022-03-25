@@ -59,5 +59,5 @@ class MovingStats:
         """
         osc_up_avg = div(self.osc_up, self.osc_up_steps)
         osc_down_avg = div(self.osc_down, self.osc_down_steps)
-        return np.sqrt(osc_up_avg, osc_down_avg)
+        return np.sqrt(osc_up_avg * osc_down_avg)
 

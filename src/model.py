@@ -54,7 +54,6 @@ class SugarscapeCg(Model):
             model_reporters = {
                 "SsAgent"     : lambda m: m.schedule.get_breed_count(SsAgent),
                 "Average"     : lambda m: m.stats.avg(),
-                "Stdev"       : lambda m: m.stats.stdev(),
                 "Oscillation" : lambda m: m.stats.osc(),
             },
         )

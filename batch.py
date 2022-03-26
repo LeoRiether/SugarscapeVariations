@@ -6,18 +6,20 @@ import pandas as pd
 import sys
 import os
 
-def run(
-    rp=np.linspace(0, 0.5, 11),
-    gf=[0.15],
-):
+def run(debug=False):
 
     params = {
-        "reproduce_prob": rp,
-        "growback_factor": gf,
+        "reproduce_prob": np.linspace(0, 0.5, 11),
+        "growback_factor": [0.15],
     }
 
     iterations = 300
     steps = 100
+
+    if debug:
+        params["reproduce_prob"] = [0.15]
+        iterations = 2
+        steps = 5
 
     results = batch_run(
         SugarscapeCg,
@@ -41,10 +43,11 @@ def run(
     fn += "_t{}.csv".format(timestamp)
 
     os.makedirs("csv", exist_ok=True)
-    dataframe.to_csv(os.path.join("csv", fn))
+    dataframe.drop(['SsAgent'], axis=1).to_csv(os.path.join("csv", 'model_' + fn))
+    dataframe.drop(['Oscillation', 'Average'], axis=1).to_csv(os.path.join("csv", 'agent_' + fn))
 
 if __name__ == '__main__':
     if sys.argv[-1] == '--debug':
-        run(rp=[0.15])
+        run(debug=True)
     else:
         run()

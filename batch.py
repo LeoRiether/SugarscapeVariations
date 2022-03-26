@@ -6,7 +6,7 @@ import pandas as pd
 import sys
 import os
 
-def run(debug=False):
+def run(split=1, debug=False):
 
     params = {
         "reproduce_prob": np.linspace(0, 0.65, 12),
@@ -21,46 +21,50 @@ def run(debug=False):
         iterations = 2
         steps = 5
 
-    print("starting results")
+    for i in range((iterations + split - 1) // split):
+        print("starting results")
 
-    results = batch_run(
-        SugarscapeCg,
-        params,
-        iterations=iterations,
-        max_steps=steps,
-        number_processes=None,
-        data_collection_period=-1,
-    )
+        results = batch_run(
+            SugarscapeCg,
+            params,
+            iterations=iterations // split,
+            max_steps=steps,
+            number_processes=None,
+            data_collection_period=-1,
+        )
 
-    print("results ok")
+        print("results ok")
 
-    dataframe = pd.DataFrame(results)
+        dataframe = pd.DataFrame(results)
 
-    print("dataframe ok")
+        print("dataframe ok")
 
-    timestamp = datetime.now().strftime("%Y-%m-%d_%H%M%S")
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H%M%S")
 
-    print("timestamp ok")
+        print("timestamp ok")
 
-    # Create csv filename
-    fn = "data"
-    # if type(rp) != list:
-    #     fn += "_rp{}".format(rp)
-    # if type(gf) != list:
-    #     fn += "_gf{}".format(gf)
-    fn += "_t{}.csv".format(timestamp)
+        # Create csv filename
+        fn = "data"
+        # if type(rp) != list:
+        #     fn += "_rp{}".format(rp)
+        # if type(gf) != list:
+        #     fn += "_gf{}".format(gf)
+        fn += "_t{}.csv".format(timestamp)
 
-    print("fn ok")
+        print("fn ok")
 
-    os.makedirs("csv", exist_ok=True)
-    print("makedir ok")
-    dataframe.drop(['SsAgent'], axis=1).to_csv(os.path.join("csv", 'model_' + fn))
-    print("model_ ok")
-    dataframe.drop(['Oscillation', 'Average'], axis=1).to_csv(os.path.join("csv", 'agent_' + fn))
-    print("agent_ ok")
+        os.makedirs("csv", exist_ok=True)
+        print("makedir ok")
+        dataframe.drop(['SsAgent'], axis=1).to_csv(os.path.join("csv", 'model_' + fn))
+        print("model_ ok")
+        dataframe.drop(['Oscillation', 'Average'], axis=1).to_csv(os.path.join("csv", 'agent_' + fn))
+        print("agent_ ok")
+
 
 if __name__ == '__main__':
     if sys.argv[-1] == '--debug':
         run(debug=True)
+    if sys.argv[-1] == '--split':
+        run(split=10)
     else:
         run()

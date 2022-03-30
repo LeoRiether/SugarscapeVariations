@@ -75,7 +75,6 @@ class SsAgent(Agent):
             self.model.schedule_add_child(child)
 
     def step(self):
-        # print(self.sugar, self.metabolism, self.get_sugar(self.pos).amount)
         self.move()
         self.eat()
         self.reproduce()

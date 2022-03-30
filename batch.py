@@ -6,20 +6,15 @@ import pandas as pd
 import sys
 import os
 
-def run(split=1, debug=False):
+def run(split=1):
 
     params = {
         "reproduce_prob": np.linspace(0, 0.6, 13),
         "growback_factor": 0.15,
     }
 
-    iterations = 500
+    iterations = 300
     steps = 100
-
-    if debug:
-        params["reproduce_prob"] = 0.15
-        iterations = 2
-        steps = 5
 
     for i in range(split):
         results = batch_run(
@@ -60,9 +55,7 @@ def join(files):
 # join(files).to_csv("MODEL.csv")
 
 if __name__ == '__main__':
-    if sys.argv[-1] == '--debug':
-        run(debug=True)
-    elif sys.argv[-1] == '--split':
+    if sys.argv[-1] == '--split':
         run(split=20)
     else:
         run()

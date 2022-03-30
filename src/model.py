@@ -9,6 +9,8 @@ Center for Connected Learning and Computer-Based Modeling,
 Northwestern University, Evanston, IL.
 """
 
+from datetime import datetime
+
 from mesa import Model
 from mesa.space import MultiGrid
 from mesa.datacollection import DataCollector
@@ -34,9 +36,10 @@ class SugarscapeCg(Model):
 
         Args:
             initial_population: Number of population to start with
-            reproduce_prob: Probability that a given ant reproduces in some
-                            step of the simulation
+            reproduce_prob: Probabilidade de que uma formiga se reproduza
+                            em um passo da simulação
             growback_factor: Amount that every sugarcane grows by each step
+            growback_factor: Quantidade de açúcar que cada cana 
 
         """
 
@@ -113,6 +116,23 @@ class SugarscapeCg(Model):
 
         if len(self.schedule.agents_by_breed[SsAgent]) == 0:
             self.running = False
+
+        if self.schedule.steps == 100 or (self.schedule.steps < 100 and not self.running):
+            timestamp = datetime.now().strftime("%Y-%m-%d_%H%M%S")
+            suffix = "_data_rp{}_gf{}_t{}.csv".format(
+                self.reproduce_prob,
+                self.growback_factor,
+                timestamp
+            )
+            import os
+            os.makedirs("csv", exist_ok=True)
+            self.datacollector \
+                .get_agent_vars_dataframe() \
+                .to_csv("csv/agent" + suffix)
+            self.datacollector \
+                .get_model_vars_dataframe() \
+                .to_csv("csv/model" + suffix)
+
 
     def run_model(self, step_count=200):
 

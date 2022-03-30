@@ -13,8 +13,6 @@ class MovingStats:
 
         As estatísticas calculadas atualmente são:
         - avg: média móvel
-        - stdev: espécie de desvio padrão, calculado a cada etapa com base
-                 na média móvel e no valor da população
         - osc: medida de oscilação da população
     """
 

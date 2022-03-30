@@ -37,17 +37,12 @@ def run(split=1, debug=False):
 
         # Create csv filename
         fn = "data"
-        # if type(rp) != list:
-        #     fn += "_rp{}".format(rp)
-        # if type(gf) != list:
-        #     fn += "_gf{}".format(gf)
         fn += "_t{}.csv".format(timestamp)
 
         os.makedirs("csv", exist_ok=True)
         dataframe.drop(['SsAgent'], axis=1).to_csv(os.path.join("csv", 'model_' + fn))
         dataframe.drop(['Oscillation', 'Average'], axis=1).to_csv(os.path.join("csv", 'agent_' + fn))
 
-files = [ e.path for e in os.scandir('model') ]
 def join(files):
     """ Concatena vários dataframes em um só """
     frame = pd.read_csv(files[0]).drop('Unnamed: 0', axis=1)
@@ -58,6 +53,11 @@ def join(files):
         max_id = max(max_id, frame2['RunId'].max())
         frame = pd.concat([ frame, frame2 ])
     return frame
+
+# files = [ e.path for e in os.scandir('agent') ]
+# join(files).to_csv("AGENT.csv")
+# files = [ e.path for e in os.scandir('model') ]
+# join(files).to_csv("MODEL.csv")
 
 if __name__ == '__main__':
     if sys.argv[-1] == '--debug':
